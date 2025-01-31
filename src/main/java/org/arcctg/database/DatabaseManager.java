@@ -4,7 +4,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import org.springframework.stereotype.Component;
 
+@Component
 public class DatabaseManager {
     private static final String JDBC_URL = "jdbc:h2:./data/bot";
     private static final String JDBC_USER = "sa";
