@@ -69,6 +69,18 @@ public class ReactionBot implements SpringLongPollingBot, LongPollingSingleThrea
                     } else {
                         addUser(parts[1], parts[2]);
                     }
+                } else if (command.equals("/updateuser")) {
+                    if (parts.length < 3) {
+                        System.out.println("Expected the username and the new emoji");
+                    } else {
+                        updateUser(parts[1], parts[2]);
+                    }
+                } else if (command.equals("/removeuser")) {
+                    if (parts.length < 2) {
+                        System.out.println("Expected the username");
+                    } else {
+                        removeUser(parts[1]);
+                    }
                 } else {
                     System.out.println("Unknown command: " + command);
                 }
@@ -84,6 +96,31 @@ public class ReactionBot implements SpringLongPollingBot, LongPollingSingleThrea
                     e.printStackTrace();
                 }
             }
+        }
+    }
+
+    private void removeUser(String username) {
+        try (Connection connection = DatabaseManager.getConnection();
+            PreparedStatement statement = connection.prepareStatement("DELETE FROM users WHERE username = ?")) {
+
+            statement.setString(1, username);
+
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void updateUser(String username, String emoji) {
+        try (Connection connection = DatabaseManager.getConnection();
+            PreparedStatement statement = connection.prepareStatement("UPDATE users SET emoji = ? WHERE username = ?")) {
+
+            statement.setString(1, emoji);
+            statement.setString(2, username);
+
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
